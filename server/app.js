@@ -5,16 +5,16 @@ const helmet = require("helmet");
 
 const app = express();
 
+// Allowed Frontend Origins
 const allowedOrigins = [
     process.env.CLIENT_URL,
-    ...(process.env.NODE_ENV !== "production"
-        ? ["http://localhost:5173"]
-        : []),
+    "http://localhost:5173",
 ].filter(Boolean);
 
 // Security Middleware
 app.use(helmet());
 
+// CORS Configuration
 app.use(
     cors({
         origin: (origin, callback) => {
@@ -24,9 +24,12 @@ app.use(
 
             return callback(new Error("Not allowed by CORS"));
         },
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
 
+// Body Parser
 app.use(express.json({ limit: "1mb" }));
 
 // Routes
